@@ -16,29 +16,25 @@ public:
   }
   void SetReal(double real) { real_ = real; }
   void SetImaginary(double imaginary) { imaginary_ = imaginary; }
-  // даём доступ приватным полям класса, ниже перечисленным функциям(операторам)
+  
   friend Complex operator+(Complex z1, Complex z2);
   friend Complex operator-(Complex z1, Complex z2);
   friend Complex operator*(Complex z1, Complex z2);
-  // деление пока не реализован
-  friend Complex operator/(Complex z1, Complex z2);
-  // операторы вывода и остальные
   friend std::ostream& operator<<(std::ostream& out, Complex z);
   friend bool operator==(Complex z1, Complex z2);
   friend bool operator!=(Complex z1, Complex z2);
-  // деструктор
+  
   ~Complex() {
     real_ = 0;
     imaginary_ = 0;
   }
 
 private:
-  // приватные поля
   double real_;
   double imaginary_;
 };
+
 // перегрузка опрераторов
-// + (оператор + является отображением то есть + : Complex * Complex -> Complex)
 Complex operator+(Complex z1, Complex z2){
   double sum_real = z1.GetReal() + z2.GetReal();
   double sum_imaginary = z1.GetImaginary() + z2.GetImaginary();
@@ -50,14 +46,12 @@ Complex operator-(Complex z1, Complex z2){
   double diff_imaginary = z1.GetImaginary() - z2.GetImaginary();
   return Complex(diff_real, diff_imaginary);
 }
-// * (формулу можно загуглить)
+// * 
 Complex operator*(Complex z1, Complex z2){
   double multi_real = z1.GetReal() * z2.GetReal() -  z1.GetImaginary() * z2.GetImaginary();
   double multi_imaginary = z2.GetImaginary() * z1.GetReal() - z1.GetImaginary() * z2.GetReal();
   return Complex(multi_real, multi_imaginary);
 }
-// / (деление пока не реализован)
-Complex operator/(Complex z1, Complex z2){}
 // перегрузка оператора вывода
 std::ostream& operator<<(std::ostream& out, Complex z){
   // разбор случаев где Re(z)!=0
@@ -83,7 +77,7 @@ bool operator==(Complex z1, Complex z2){
   if(z1.GetReal() == z2.GetReal() and z1.GetImaginary() == z2.GetImaginary()) { return true; }
   else { return false; }
 }
-// тоже самое что и == 
+
 bool operator!=(Complex z1, Complex z2){
   if(z1.GetReal() == z2.GetReal() and z1.GetImaginary() == z2.GetImaginary()) { return false; }
   else { return true; }
