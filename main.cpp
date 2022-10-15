@@ -1,24 +1,105 @@
 
-// Online C++ Compiler - Build, Compile and Run your C++ programs online in your favorite browser
-
 #include <iostream>
-#include <vector>
+#include <cmath>
+
+class Complex {
+public:
+  // конструктор
+  Complex(double real, double imaginary) : real_(real), imaginary_(imaginary) {}
+  // методы класса
+  double GetReal() { return real_; }
+  double GetImaginary() { return imaginary_; }
+  double Module(double real, double imaginary) {
+    real_ = real;
+    imaginary_ = imaginary;
+    return sqrt(real_ * real_ + imaginary_ * imaginary_);
+  }
+  void SetReal(double real) { real_ = real; }
+  void SetImaginary(double imaginary) { imaginary_ = imaginary; }
+  // даём доступ приватным полям класса, ниже перечисленным функциям(операторам)
+  friend Complex operator+(Complex z1, Complex z2);
+  friend Complex operator-(Complex z1, Complex z2);
+  friend Complex operator*(Complex z1, Complex z2);
+  // деление пока не реализован
+  friend Complex operator/(Complex z1, Complex z2);
+  // операторы вывода и остальные
+  friend std::ostream& operator<<(std::ostream& out, Complex z);
+  friend bool operator==(Complex z1, Complex z2);
+  friend bool operator!=(Complex z1, Complex z2);
+  // деструктор
+  ~Complex() {
+    real_ = 0;
+    imaginary_ = 0;
+  }
+
+private:
+  // приватные поля
+  double real_;
+  double imaginary_;
+};
+// перегрузка опрераторов
+// + (оператор + является отображением то есть + : Complex * Complex -> Complex)
+Complex operator+(Complex z1, Complex z2){
+  double sum_real = z1.GetReal() + z2.GetReal();
+  double sum_imaginary = z1.GetImaginary() + z2.GetImaginary();
+  return Complex(sum_real, sum_imaginary);
+}
+// -
+Complex operator-(Complex z1, Complex z2){
+  double diff_real = z1.GetReal() - z2.GetReal();
+  double diff_imaginary = z1.GetImaginary() - z2.GetImaginary();
+  return Complex(diff_real, diff_imaginary);
+}
+// * (формулу можно загуглить)
+Complex operator*(Complex z1, Complex z2){
+  double multi_real = z1.GetReal() * z2.GetReal() -  z1.GetImaginary() * z2.GetImaginary();
+  double multi_imaginary = z2.GetImaginary() * z1.GetReal() - z1.GetImaginary() * z2.GetReal();
+  return Complex(multi_real, multi_imaginary);
+}
+// / (деление пока не реализован)
+Complex operator/(Complex z1, Complex z2){}
+// перегрузка оператора вывода
+std::ostream& operator<<(std::ostream& out, Complex z){
+  // разбор случаев где Re(z)!=0
+  if (z.GetReal() != 0 and z.GetImaginary() > 0) {
+    out << z.GetReal() << "+" << z.GetImaginary() << "i";
+  } else if (z.GetReal() != 0 and z.GetImaginary() < 0) {
+    out << z.GetReal() << z.GetImaginary() << "i";
+  } else if (z.GetReal() != 0 and z.GetImaginary() == 0) {
+    out << z.GetReal();
+  }
+  // разбор случаев где Re(z)==0
+  if (z.GetReal() == 0 and z.GetImaginary() > 0) {
+    out << z.GetImaginary() << "i";
+  } else if (z.GetReal() == 0 and z.GetImaginary() < 0) {
+    out << z.GetImaginary() << "i";
+  } else if (z.GetReal() == 0 and z.GetImaginary() == 0) {
+    out << 0;
+  }
+  return out;
+}
+// перегрузка операторов сравнения 
+bool operator==(Complex z1, Complex z2){
+  if(z1.GetReal() == z2.GetReal() and z1.GetImaginary() == z2.GetImaginary()) { return true; }
+  else { return false; }
+}
+// тоже самое что и == 
+bool operator!=(Complex z1, Complex z2){
+  if(z1.GetReal() == z2.GetReal() and z1.GetImaginary() == z2.GetImaginary()) { return false; }
+  else { return true; }
+}
 
 
+int main() {
+  double real_z1, imaginary_z1, real_z2, imaginary_z2;
+  std::cin >> real_z1 >> imaginary_z1 >> real_z2 >> imaginary_z2;
+  // создание комплесных чисел
+  Complex z1(real_z1, imaginary_z1);
+  Complex z2(real_z2, imaginary_z2);
 
-
-int main()
-{
-    int x = 5614;
-    // static_cast
-    double d = static_cast<double>(x);
-    std::cout << d << " " << x << "\n";
-    // reinterpret_cast
-    std::cout << *reinterpret_cast<double*>(&x) << "\n";
-    float dd = 3.14;
-    std::cout << *reinterpret_cast<int*>(&dd) << "\n";
-    // 
-    
-    
-    return 0;
+  // тест прегруженных опрераторов + - * << ==
+  std::cout << z1 + z2 << " " << z1 * z2 << " " << z1 - z2 << " " << (z1 == z2 ? 1 : 2);
+  
+  
+  return 0;
 }
